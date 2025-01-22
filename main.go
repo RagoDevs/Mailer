@@ -79,6 +79,7 @@ func main() {
 
 	flag.Parse()
 
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
 	router.POST("/submit-contact", func(c *gin.Context) {
