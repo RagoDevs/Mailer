@@ -57,7 +57,6 @@ func (mc *MailConfig) sendEmail(form ContactForm, recipients []string) error {
 		toHeader += recipient
 	}
 
-	
 	subject := "Contact Form Submission"
 	msg := fmt.Sprintf("Subject: %s\nTo: %s\nContent-Type: text/html\n\n%s", subject, toHeader, emailBody.String())
 
@@ -72,7 +71,7 @@ func (mc *MailConfig) sendEmail(form ContactForm, recipients []string) error {
 
 func main() {
 
-	var mc *MailConfig
+	mc := &MailConfig{}
 	flag.StringVar(&mc.HOST, "MAIL HOST", os.Getenv("EMAIL_HOST"), "MAIL HOST")
 	flag.StringVar(&mc.PORT, "MAIL PORT", os.Getenv("EMAIL_PORT"), "MAIL PORT")
 	flag.StringVar(&mc.USER, "MAIL USER ", os.Getenv("EMAIL_USER"), "MAIL USER")
