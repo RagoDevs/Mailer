@@ -75,7 +75,7 @@ func main() {
 	flag.StringVar(&mc.HOST, "MAIL HOST", os.Getenv("EMAIL_HOST"), "MAIL HOST")
 	flag.StringVar(&mc.PORT, "MAIL PORT", os.Getenv("EMAIL_PORT"), "MAIL PORT")
 	flag.StringVar(&mc.USER, "MAIL USER ", os.Getenv("EMAIL_USER"), "MAIL USER")
-	flag.StringVar(&mc.PORT, "MAIL PASSWORD", os.Getenv("EMAIL_PASS"), "MAIL PWD")
+	flag.StringVar(&mc.PWD, "MAIL PASSWORD", os.Getenv("EMAIL_PASS"), "MAIL PWD")
 
 	flag.Parse()
 
