@@ -10,6 +10,7 @@ import (
 	"net/smtp"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,6 +38,18 @@ const emailTemplate = `
 <p><b>Message:</b></p>
 <p>{{.Message}}</p>
 `
+
+func enableCORS() gin.HandlerFunc {
+
+	corsConfig := cors.DefaultConfig()
+
+	corsConfig.AllowAllOrigins = true
+
+	corsConfig.AllowHeaders = []string{"Content-Type", "Authorization"}
+
+	return cors.New(corsConfig)
+
+}
 
 func (mc *MailConfig) sendEmail(form ContactForm, recipients []string) error {
 	tmpl, err := template.New("email").Parse(emailTemplate)
@@ -81,7 +94,7 @@ func main() {
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
-
+	router.Use(enableCORS())
 	router.POST("/submit-contact", func(c *gin.Context) {
 		var form ContactForm
 		if err := c.ShouldBindJSON(&form); err != nil {
