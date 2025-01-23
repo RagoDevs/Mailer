@@ -43,7 +43,7 @@ jobs:
            password: ${{ secrets.PASSWORD }}
            port: ${{ secrets.PORT }}
            source: ./mailer
-           target: "/home/${{ secrets.USERNAME }}/projects/mailer
+           target: "/home/${{ secrets.USERNAME }}/projects/mailer"
 
       - name: Start Mail Server service 
         uses: appleboy/ssh-action@master
