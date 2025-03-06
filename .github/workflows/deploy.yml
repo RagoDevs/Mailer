@@ -22,7 +22,7 @@ jobs:
     - name: Build
       run: go build -v -o mailer ./main.go
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
           name: mailer-artifact
           path: ./mailer
@@ -32,7 +32,7 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: mailer-artifact
       - name: Deploy to server
