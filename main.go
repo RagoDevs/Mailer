@@ -16,10 +16,12 @@ import (
 )
 
 type MailConfig struct {
-	HOST string
-	PORT string
-	USER string
-	PWD  string
+	HOST   string
+	PORT   string
+	USER   string
+	PWD    string
+	ADMIN1 string
+	ADMIN2 string
 }
 
 type ContactForm struct {
@@ -170,6 +172,8 @@ func main() {
 	flag.StringVar(&mc.PORT, "MAIL PORT", os.Getenv("EMAIL_PORT"), "MAIL PORT")
 	flag.StringVar(&mc.USER, "MAIL USER ", os.Getenv("EMAIL_USER"), "MAIL USER")
 	flag.StringVar(&mc.PWD, "MAIL PASSWORD", os.Getenv("EMAIL_PASS"), "MAIL PWD")
+	flag.StringVar(&mc.ADMIN1, "FIRST ADMIN", os.Getenv("FIRST_ADMIN"), "FIRST ADMIN")
+	flag.StringVar(&mc.ADMIN2, "SECOND ADMIN", os.Getenv("SECOND_ADMIN"), "SECOND ADMIN")
 
 	flag.Parse()
 
@@ -184,8 +188,8 @@ func main() {
 		}
 
 		recipients := []string{
-			"lugano.ngulwa@gmail.com",
-			"jswigo003@gmail.com",
+			mc.ADMIN1,
+			mc.ADMIN2,
 		}
 
 		if err := mc.sendEmail(form, recipients); err != nil {
