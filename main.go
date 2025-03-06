@@ -9,6 +9,7 @@ import (
 	"log/slog"
 	"net/smtp"
 	"os"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -31,12 +32,82 @@ type ContactForm struct {
 }
 
 const emailTemplate = `
-<p><b>Name:</b> {{.FirstName}} {{.LastName}}</p>
-<p><b>Email:</b> {{.Email}}</p>
-<p><b>Phone:</b> {{.Phone}}</p>
-<p><b>Service Requested:</b> {{.Service}}</p>
-<p><b>Message:</b></p>
-<p>{{.Message}}</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-bottom: 2px solid #007bff;
+            margin-bottom: 20px;
+        }
+        .content {
+            padding: 0 20px 20px 20px;
+        }
+        .field {
+            margin-bottom: 15px;
+        }
+        .label {
+            font-weight: bold;
+            color: #555;
+        }
+        .message-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            font-size: 0.9em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>New Contact Form Submission</h2>
+        <p>Received on {{.FormattedDate}}</p>
+    </div>
+    
+    <div class="content">
+        <div class="field">
+            <span class="label">From:</span> {{.FirstName}} {{.LastName}}
+        </div>
+        
+        <div class="field">
+            <span class="label">Email:</span> <a href="mailto:{{.Email}}">{{.Email}}</a>
+        </div>
+        
+        <div class="field">
+            <span class="label">Phone:</span> {{.Phone}}
+        </div>
+        
+        <div class="field">
+            <span class="label">Service Requested:</span> {{.Service}}
+        </div>
+        
+        <div class="field">
+            <span class="label">Message:</span>
+            <div class="message-box">{{.Message}}</div>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated message from your website contact form.</p>
+        </div>
+    </div>
+</body>
+</html>
 `
 
 func enableCORS() gin.HandlerFunc {
@@ -52,13 +123,24 @@ func enableCORS() gin.HandlerFunc {
 }
 
 func (mc *MailConfig) sendEmail(form ContactForm, recipients []string) error {
+	
+	type templateData struct {
+		ContactForm
+		FormattedDate string
+	}
+
+	data := templateData{
+		ContactForm:   form,
+		FormattedDate: time.Now().Format("January 2, 2006 at 3:04 PM"),
+	}
+
 	tmpl, err := template.New("email").Parse(emailTemplate)
 	if err != nil {
 		return fmt.Errorf("failed to parse email template: %v", err)
 	}
 
 	var emailBody bytes.Buffer
-	if err := tmpl.Execute(&emailBody, form); err != nil {
+	if err := tmpl.Execute(&emailBody, data); err != nil {
 		return fmt.Errorf("failed to execute email template: %v", err)
 	}
 
