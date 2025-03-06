@@ -9,6 +9,7 @@ import (
 	"log/slog"
 	"net/smtp"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -16,12 +17,11 @@ import (
 )
 
 type MailConfig struct {
-	HOST   string
-	PORT   string
-	USER   string
-	PWD    string
-	ADMIN1 string
-	ADMIN2 string
+	HOST       string
+	PORT       string
+	USER       string
+	PWD        string
+	RECEPIENTS string
 }
 
 type ContactForm struct {
@@ -172,33 +172,31 @@ func main() {
 	flag.StringVar(&mc.PORT, "MAIL PORT", os.Getenv("EMAIL_PORT"), "MAIL PORT")
 	flag.StringVar(&mc.USER, "MAIL USER ", os.Getenv("EMAIL_USER"), "MAIL USER")
 	flag.StringVar(&mc.PWD, "MAIL PASSWORD", os.Getenv("EMAIL_PASS"), "MAIL PWD")
-	flag.StringVar(&mc.ADMIN1, "FIRST ADMIN", os.Getenv("FIRST_ADMIN"), "FIRST ADMIN")
-	flag.StringVar(&mc.ADMIN2, "SECOND ADMIN", os.Getenv("SECOND_ADMIN"), "SECOND ADMIN")
+	flag.StringVar(&mc.RECEPIENTS, "RECEPIENTS", os.Getenv("RECEPIENTS"), "RECEPIENTS")
 
 	flag.Parse()
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.Use(enableCORS())
+	
 	router.POST("/submit-contact", func(c *gin.Context) {
+
 		var form ContactForm
 		if err := c.ShouldBindJSON(&form); err != nil {
 			c.JSON(400, gin.H{"error": err.Error()})
 			return
 		}
 
-		recipients := []string{
-			mc.ADMIN1,
-			mc.ADMIN2,
-		}
+		recipients := strings.Split(mc.RECEPIENTS, ",")
 
 		if err := mc.sendEmail(form, recipients); err != nil {
 			log.Printf("Error sending email: %v", err)
-			c.JSON(500, gin.H{"error": "Failed to send email"})
+			c.JSON(500, gin.H{"error": "Failed to send emails"})
 			return
 		}
 
-		c.JSON(200, gin.H{"message": "Email sent successfully!"})
+		c.JSON(200, gin.H{"message": "Emails sent successfully!"})
 	})
 
 	port := os.Getenv("PORT")
