@@ -76,7 +76,6 @@ const emailTemplate = `
 </head>
 <body>
     <div class="header">
-        <h2>New Contact Form Submission</h2>
         <p>Received on {{.FormattedDate}}</p>
     </div>
     
@@ -123,7 +122,7 @@ func enableCORS() gin.HandlerFunc {
 }
 
 func (mc *MailConfig) sendEmail(form ContactForm, recipients []string) error {
-	
+
 	type templateData struct {
 		ContactForm
 		FormattedDate string
