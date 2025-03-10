@@ -44,6 +44,10 @@ type ActivateOrResetData struct {
 	Token string `json:"token" binding:"required"`
 }
 
+type ResetCompleteData struct {
+	Email string `json:"email" binding:"required,email"`
+}
+
 const emailTemplate = `
 <!DOCTYPE html>
 <html>
@@ -624,7 +628,7 @@ func (mc *MailConfig) sendPasswordResetEmail(data ActivateOrResetData) error {
 	return nil
 }
 
-func (mc *MailConfig) sendResetCompletedEmail(data ActivateOrResetData) error {
+func (mc *MailConfig) sendResetCompletedEmail(data ResetCompleteData) error {
 
 	tmpl, err := template.New("email").Parse(completedreset_template)
 	if err != nil {
@@ -737,7 +741,7 @@ func main() {
 
 	router.POST("/rent-completedpwdreset", func(c *gin.Context) {
 
-		var data ActivateOrResetData
+		var data ResetCompleteData
 		if err := c.ShouldBindJSON(&data); err != nil {
 			c.JSON(400, gin.H{"error": err.Error()})
 			return
