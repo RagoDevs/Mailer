@@ -200,7 +200,7 @@ const welcome_template = `
         
         <p>To complete your registration and access all features of our platform, please activate your account by clicking the button below:</p>
         
-        <a href="https://rent.ragodevs.com/admins/activate?token={{.Token}}" class="button">Activate Account</a>
+        <a href="https://rent.ragodevs.com/activate?token={{.Token}}" class="button">Activate Account</a>
         
         <div class="important-note">
             <p>Please note that this activation link will expire in 3 days and can only be used once.</p>
