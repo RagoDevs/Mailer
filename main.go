@@ -153,13 +153,15 @@ const welcome_template = `
         }
         .button {
             background-color: #007bff;
-            color: white;
+            color: white !important;    
             padding: 12px 24px;
             text-decoration: none;
             border-radius: 4px;
             font-weight: bold;
             display: inline-block;
             margin: 20px 0;
+            text-shadow: none;         
+            opacity: 1;            
         }
         .button:hover {
             background-color: #0069d9;
@@ -209,7 +211,7 @@ const welcome_template = `
         <div class="contact-info">
             <p>If you have any questions or need assistance, please contact our support team:</p>
             <p>Email: <a href="mailto:support@ragodevs.com">support@ragodevs.com</a><br>
-            Phone: 0654051622</p>
+            Phone: +255 654 051 622</p>
         </div>
         
         <p>We look forward to helping you streamline your property management operations.</p>
@@ -218,7 +220,7 @@ const welcome_template = `
         <p>The Rent Management System Team</p>
         
         <div class="footer">
-            <p><a href="https://www.rent.ragodevs.com">www.rent.ragodevs.com</a></p>
+            <p><a href="https://rent.ragodevs.com">rent.ragodevs.com</a></p>
             <p>© 2025 Rent Management System. All rights reserved.</p>
         </div>
     </div>
@@ -250,16 +252,20 @@ const activate_template = `
         .content {
             padding: 0 20px 20px 20px;
         }
+
         .button {
             background-color: #007bff;
-            color: white;
+            color: white !important;    
             padding: 12px 24px;
             text-decoration: none;
             border-radius: 4px;
             font-weight: bold;
             display: inline-block;
             margin: 20px 0;
+            text-shadow: none;         
+            opacity: 1;            
         }
+
         .button:hover {
             background-color: #0069d9;
         }
@@ -303,7 +309,7 @@ const activate_template = `
         <div class="contact-info">
             <p>If you have any questions or need assistance, please contact our support team:</p>
             <p>Email: <a href="mailto:support@ragodevs.com">support@ragodevs.com</a><br>
-            Phone: 0654051622</p>
+            Phone: +255 654 051 622</p>
         </div>
         
         <p>We look forward to helping you streamline your property management operations.</p>
@@ -312,7 +318,7 @@ const activate_template = `
         <p>The Rent Management System Team</p>
         
         <div class="footer">
-            <p><a href="https://www.rent.ragodevs.com">www.rent.ragodevs.com</a></p>
+            <p><a href="https://rent.ragodevs.com">www.ragodevs.com</a></p>
             <p>© 2025 Rent Management System. All rights reserved.</p>
         </div>
     </div>
@@ -344,18 +350,20 @@ const pwdreset_template = `
         .content {
             padding: 0 20px 20px 20px;
         }
-        .button {
-            background-color: #007bff;
-            color: white !important;    /* Added !important to override any other styles */
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            display: inline-block;
-            margin: 20px 0;
-            text-shadow: none;          /* Ensures no text shadow is affecting visibility */
-            opacity: 1;                 /* Ensures the text is fully opaque */
+
+       .button {
+         background-color: #007bff;
+         color: white !important;    
+         padding: 12px 24px;
+         text-decoration: none;
+         border-radius: 4px;
+         font-weight: bold;
+         display: inline-block;
+         margin: 20px 0;
+         text-shadow: none;         
+         opacity: 1;            
         }
+
         .button:hover {
             background-color: #0069d9;
         }
@@ -398,14 +406,14 @@ const pwdreset_template = `
         <div class="contact-info">
             <p>If you have any questions or need assistance, please contact our support team:</p>
             <p>Email: <a href="mailto:support@ragodevs.com">support@ragodevs.com</a><br>
-            Phone: 0654051622</p>
+            Phone: +255 654 051 622</p>
         </div>
         
         <p>Best regards,</p>
         <p>The Rent Management System Team</p>
         
         <div class="footer">
-            <p><a href="https://www.rent.ragodevs.com">www.rent.ragodevs.com</a></p>
+            <p><a href="https://rent.ragodevs.com">rent.ragodevs.com</a></p>
             <p>© 2025 Rent Management System. All rights reserved.</p>
         </div>
     </div>
@@ -437,15 +445,18 @@ const completedreset_template = `
         .content {
             padding: 0 20px 20px 20px;
         }
+
         .button {
             background-color: #007bff;
-            color: white;
+            color: white !important;    
             padding: 12px 24px;
             text-decoration: none;
             border-radius: 4px;
             font-weight: bold;
             display: inline-block;
             margin: 20px 0;
+            text-shadow: none;         
+            opacity: 1;            
         }
         .button:hover {
             background-color: #0069d9;
@@ -484,14 +495,14 @@ const completedreset_template = `
         <div class="contact-info">
             <p>If you have any questions or need assistance, please contact our support team:</p>
             <p>Email: <a href="mailto:support@ragodevs.com">support@ragodevs.com</a><br>
-            Phone: 0654051622</p>
+            Phone: +255 654 051 622</p>
         </div>
         
         <p>Best regards,</p>
         <p>The Rent Management System Team</p>
         
         <div class="footer">
-            <p><a href="https://www.rent.ragodevs.com">www.rent.ragodevs.com</a></p>
+            <p><a href="https://rent.ragodevs.com">rent.ragodevs.com</a></p>
             <p>© 2025 Rent Management System. All rights reserved.</p>
         </div>
     </div>
