@@ -346,13 +346,15 @@ const pwdreset_template = `
         }
         .button {
             background-color: #007bff;
-            color: white;
+            color: white !important;    /* Added !important to override any other styles */
             padding: 12px 24px;
             text-decoration: none;
             border-radius: 4px;
             font-weight: bold;
             display: inline-block;
             margin: 20px 0;
+            text-shadow: none;          /* Ensures no text shadow is affecting visibility */
+            opacity: 1;                 /* Ensures the text is fully opaque */
         }
         .button:hover {
             background-color: #0069d9;
