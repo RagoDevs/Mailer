@@ -294,7 +294,7 @@ const activate_template = `
         
         <p>Please activate your account to continuing using our services by clicking the button below:</p>
         
-        <a href="https://rent.ragodevs.com/admins/activate?token={{.Token}}" class="button">Activate Account</a>
+        <a href="https://rent.ragodevs.com/activate?token={{.Token}}" class="button">Activate Account</a>
         
         <div class="important-note">
             <p>Please note that this activation link will expire in 3 days and can only be used once.</p>
@@ -387,7 +387,7 @@ const pwdreset_template = `
         
         <p>Your password can be reset by clicking the button below. If you did not request a new password, please ignore this email.</p>
         
-        <a href="https://rent.ragodevs.com/admins/reset?token={{.Token}}" class="button">Reset Password</a>
+        <a href="https://rent.ragodevs.com/reset?token={{.Token}}" class="button">Reset Password</a>
         
         <div class="important-note">
             <p>Please note that this reset link will expire 45 minutes and can only be used once.</p>
