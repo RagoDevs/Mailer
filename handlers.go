@@ -22,7 +22,7 @@ func (app *application) sendContactEmailHandler(c echo.Context) error {
 
 	recipients := strings.Split(app.config.mail.recipients, ",")
 
-	if err := app.sendEmail(input, recipients); err != nil {
+	if err := app.sendContactUsEmail(input, recipients); err != nil {
 		log.Printf("Error sending email: %v", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to send emails"})
 	}

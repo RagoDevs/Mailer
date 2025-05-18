@@ -33,7 +33,7 @@ type ResetCompleteData struct {
 }
 
 
-func (app *application) sendEmail(form ContactForm, recipients []string) error {
+func (app *application) sendContactUsEmail(form ContactForm, recipients []string) error {
 
 	type templateData struct {
 		ContactForm
@@ -45,7 +45,7 @@ func (app *application) sendEmail(form ContactForm, recipients []string) error {
 		FormattedDate: time.Now().Format("January 2, 2006 at 3:04 PM"),
 	}
 
-	tmpl, err := template.New("email").Parse(emailTemplate)
+	tmpl, err := template.New("email").Parse(contactusTemplate)
 	if err != nil {
 		return fmt.Errorf("failed to parse email template: %v", err)
 	}

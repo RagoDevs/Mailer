@@ -1,6 +1,6 @@
 package main
 
-const emailTemplate = `
+const contactusTemplate = `
 <!DOCTYPE html>
 <html>
 <head>
