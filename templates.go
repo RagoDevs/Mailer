@@ -1,115 +1,5 @@
 package main
 
-// Common CSS styles for all email templates
-const commonStyles = `
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        color: #333;
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: #f9f9f9;
-    }
-    .container {
-        background-color: #ffffff;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        margin: 20px auto;
-    }
-    .header {
-        background-color: #4361ee;
-        padding: 25px 20px;
-        text-align: center;
-        color: white;
-    }
-    .header h2 {
-        margin: 0;
-        font-weight: 600;
-        font-size: 24px;
-    }
-    .header p {
-        margin: 10px 0 0;
-        opacity: 0.9;
-    }
-    .content {
-        padding: 30px 25px;
-    }
-    .field {
-        margin-bottom: 20px;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #eee;
-    }
-    .field:last-child {
-        border-bottom: none;
-    }
-    .label {
-        font-weight: 600;
-        color: #4361ee;
-        display: inline-block;
-        min-width: 120px;
-    }
-    .message-box {
-        background-color: #f8f9fa;
-        border-left: 4px solid #4361ee;
-        padding: 15px;
-        margin-top: 15px;
-        border-radius: 0 4px 4px 0;
-    }
-    .button {
-        background-color: #4361ee;
-        color: white !important;    
-        padding: 12px 28px;
-        text-decoration: none;
-        border-radius: 4px;
-        font-weight: 600;
-        display: inline-block;
-        margin: 20px 0;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-    .button:hover {
-        background-color: #3a56d4;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-    .important-note {
-        background-color: #fff8e1;
-        border-left: 4px solid #ffc107;
-        padding: 15px;
-        margin: 20px 0;
-        font-size: 0.95em;
-        border-radius: 0 4px 4px 0;
-    }
-    .footer {
-        margin-top: 30px;
-        padding: 20px;
-        background-color: #f8f9fa;
-        font-size: 0.9em;
-        color: #666;
-        text-align: center;
-        border-top: 1px solid #eee;
-        border-radius: 0 0 8px 8px;
-    }
-    .contact-info {
-        margin-top: 25px;
-        padding: 15px;
-        background-color: #f1f3f9;
-        border-radius: 6px;
-    }
-    a {
-        color: #4361ee;
-        text-decoration: none;
-    }
-    a:hover {
-        text-decoration: underline;
-    }
-    .logo {
-        max-width: 150px;
-        margin-bottom: 10px;
-    }
-`
-
 const emailTemplate = `
 <!DOCTYPE html>
 <html>
@@ -117,7 +7,112 @@ const emailTemplate = `
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        ${commonStyles}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px auto;
+        }
+        .header {
+            background-color: #4361ee;
+            padding: 25px 20px;
+            text-align: center;
+            color: white;
+        }
+        .header h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px 25px;
+        }
+        .field {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .field:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: 600;
+            color: #4361ee;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .message-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #4361ee;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+        .button {
+            background-color: #4361ee;
+            color: white !important;    
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 20px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background-color: #3a56d4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .important-note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.95em;
+            border-radius: 0 4px 4px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            border-top: 1px solid #eee;
+            border-radius: 0 0 8px 8px;
+        }
+        .contact-info {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f1f3f9;
+            border-radius: 6px;
+        }
+        a {
+            color: #4361ee;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -165,7 +160,112 @@ const welcome_template = `
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        ${commonStyles}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px auto;
+        }
+        .header {
+            background-color: #4361ee;
+            padding: 25px 20px;
+            text-align: center;
+            color: white;
+        }
+        .header h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px 25px;
+        }
+        .field {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .field:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: 600;
+            color: #4361ee;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .message-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #4361ee;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+        .button {
+            background-color: #4361ee;
+            color: white !important;    
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 20px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background-color: #3a56d4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .important-note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.95em;
+            border-radius: 0 4px 4px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            border-top: 1px solid #eee;
+            border-radius: 0 0 8px 8px;
+        }
+        .contact-info {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f1f3f9;
+            border-radius: 6px;
+        }
+        a {
+            color: #4361ee;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -221,7 +321,112 @@ const activate_template = `
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        ${commonStyles}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px auto;
+        }
+        .header {
+            background-color: #4361ee;
+            padding: 25px 20px;
+            text-align: center;
+            color: white;
+        }
+        .header h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px 25px;
+        }
+        .field {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .field:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: 600;
+            color: #4361ee;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .message-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #4361ee;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+        .button {
+            background-color: #4361ee;
+            color: white !important;    
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 20px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background-color: #3a56d4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .important-note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.95em;
+            border-radius: 0 4px 4px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            border-top: 1px solid #eee;
+            border-radius: 0 0 8px 8px;
+        }
+        .contact-info {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f1f3f9;
+            border-radius: 6px;
+        }
+        a {
+            color: #4361ee;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -270,7 +475,112 @@ const pwdreset_template = `
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        ${commonStyles}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px auto;
+        }
+        .header {
+            background-color: #4361ee;
+            padding: 25px 20px;
+            text-align: center;
+            color: white;
+        }
+        .header h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px 25px;
+        }
+        .field {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .field:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: 600;
+            color: #4361ee;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .message-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #4361ee;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+        .button {
+            background-color: #4361ee;
+            color: white !important;    
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 20px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background-color: #3a56d4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .important-note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.95em;
+            border-radius: 0 4px 4px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            border-top: 1px solid #eee;
+            border-radius: 0 0 8px 8px;
+        }
+        .contact-info {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f1f3f9;
+            border-radius: 6px;
+        }
+        a {
+            color: #4361ee;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -317,7 +627,112 @@ const completedreset_template = `
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        ${commonStyles}
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #f9f9f9;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px auto;
+        }
+        .header {
+            background-color: #4361ee;
+            padding: 25px 20px;
+            text-align: center;
+            color: white;
+        }
+        .header h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 24px;
+        }
+        .header p {
+            margin: 10px 0 0;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 30px 25px;
+        }
+        .field {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .field:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: 600;
+            color: #4361ee;
+            display: inline-block;
+            min-width: 120px;
+        }
+        .message-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #4361ee;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 0 4px 4px 0;
+        }
+        .button {
+            background-color: #4361ee;
+            color: white !important;    
+            padding: 12px 28px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 20px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .button:hover {
+            background-color: #3a56d4;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .important-note {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.95em;
+            border-radius: 0 4px 4px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            border-top: 1px solid #eee;
+            border-radius: 0 0 8px 8px;
+        }
+        .contact-info {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #f1f3f9;
+            border-radius: 6px;
+        }
+        a {
+            color: #4361ee;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
