@@ -7,13 +7,15 @@ import (
 	"html/template"
 	"log"
 	"log/slog"
+	"net/http"
 	"net/smtp"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type MailConfig struct {
@@ -26,27 +28,53 @@ type MailConfig struct {
 }
 
 type ContactForm struct {
-	FirstName string `json:"first_name" binding:"required"`
-	LastName  string `json:"last_name" binding:"required"`
-	Email     string `json:"email" binding:"required,email"`
-	Phone     string `json:"phone" binding:"required"`
-	Service   string `json:"service" binding:"required"`
-	Message   string `json:"message" binding:"required"`
+	FirstName string `json:"first_name" form:"first_name" query:"first_name" param:"first_name" validate:"required"`
+	LastName  string `json:"last_name" form:"last_name" query:"last_name" param:"last_name" validate:"required"`
+	Email     string `json:"email" form:"email" query:"email" param:"email" validate:"required,email"`
+	Phone     string `json:"phone" form:"phone" query:"phone" param:"phone" validate:"required"`
+	Service   string `json:"service" form:"service" query:"service" param:"service" validate:"required"`
+	Message   string `json:"message" form:"message" query:"message" param:"message" validate:"required"`
 }
 
 type SignupData struct {
-	ID    string `json:"id" binding:"required"`
-	Email string `json:"email" binding:"required,email"`
-	Token string `json:"token" binding:"required"`
+	ID    string `json:"id" form:"id" query:"id" param:"id" validate:"required"`
+	Email string `json:"email" form:"email" query:"email" param:"email" validate:"required,email"`
+	Token string `json:"token" form:"token" query:"token" param:"token" validate:"required"`
 }
 
 type ActivateOrResetData struct {
-	Email string `json:"email" binding:"required,email"`
-	Token string `json:"token" binding:"required"`
+	Email string `json:"email" form:"email" query:"email" param:"email" validate:"required,email"`
+	Token string `json:"token" form:"token" query:"token" param:"token" validate:"required"`
 }
 
 type ResetCompleteData struct {
-	Email string `json:"email" binding:"required,email"`
+	Email string `json:"email" form:"email" query:"email" param:"email" validate:"required,email"`
+}
+
+// CustomValidator is a validator implementation for Echo using go-playground/validator
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
+// Validate validates the provided struct
+func (cv *CustomValidator) Validate(i interface{}) error {
+	if err := cv.validator.Struct(i); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return nil
+}
+
+// validateRequest validates the request data
+func validateRequest(c echo.Context, data interface{}) error {
+	if err := c.Bind(data); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(data); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 const emailTemplate = `
@@ -510,49 +538,45 @@ const completedreset_template = `
 </body>
 </html>`
 
-func enableCORS() gin.HandlerFunc {
-
-	corsConfig := cors.DefaultConfig()
-
-	corsConfig.AllowAllOrigins = true
-
-	corsConfig.AllowHeaders = []string{"Content-Type", "Authorization"}
-
-	return cors.New(corsConfig)
-
+// enableCORS middleware configures CORS settings for Echo
+func enableCORS() echo.MiddlewareFunc {
+	return middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+	})
 }
 
 // ipRestriction middleware checks if the client's IP is in the allowed list
-func ipRestriction(allowedIPs string) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		clientIP := c.ClientIP()
-		
-		// If no allowed IPs are specified, allow all requests
-		if allowedIPs == "" {
-			c.Next()
-			return
-		}
-		
-		// Split the allowed IPs string into a slice
-		allowedIPList := strings.Split(allowedIPs, ",")
-		
-		// Check if the client IP is in the allowed list
-		allowed := false
-		for _, ip := range allowedIPList {
-			if strings.TrimSpace(ip) == clientIP {
-				allowed = true
-				break
+func ipRestriction(allowedIPs string) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			clientIP := c.RealIP()
+
+			// If no allowed IPs are specified, allow all requests
+			if allowedIPs == "" {
+				return next(c)
 			}
+
+			// Split the allowed IPs string into a slice
+			allowedIPList := strings.Split(allowedIPs, ",")
+
+			// Check if the client IP is in the allowed list
+			allowed := false
+			for _, ip := range allowedIPList {
+				if strings.TrimSpace(ip) == clientIP {
+					allowed = true
+					break
+				}
+			}
+
+			// If the client IP is not allowed, return 403 Forbidden
+			if !allowed {
+				slog.Info(fmt.Sprintf("Blocked request from unauthorized IP: %s", clientIP))
+				return c.JSON(http.StatusForbidden, map[string]string{"error": "Access denied"})
+			}
+
+			return next(c)
 		}
-		
-		// If the client IP is not allowed, return 403 Forbidden
-		if !allowed {
-			slog.Info(fmt.Sprintf("Blocked request from unauthorized IP: %s", clientIP))
-			c.AbortWithStatusJSON(403, gin.H{"error": "Access denied"})
-			return
-		}
-		
-		c.Next()
 	}
 }
 
@@ -714,103 +738,100 @@ func main() {
 
 	flag.Parse()
 
-	gin.SetMode(gin.ReleaseMode)
-	router := gin.Default()
-	router.Use(enableCORS())
-	// Apply IP restriction middleware
-	router.Use(ipRestriction(mc.ALLOWED_IP))
+	// Create a new Echo instance
+	e := echo.New()
 
-	router.POST("/submit-contact", func(c *gin.Context) {
+	// Set up validator
+	e.Validator = &CustomValidator{validator: validator.New()}
 
+	// Set up middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(enableCORS())
+	e.Use(ipRestriction(mc.ALLOWED_IP))
+
+	// Handle contact form submission
+	e.POST("/submit-contact", func(c echo.Context) error {
 		var form ContactForm
-		if err := c.ShouldBindJSON(&form); err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
-			return
+		if err := validateRequest(c, &form); err != nil {
+			return err
 		}
 
 		recipients := strings.Split(mc.RECEPIENTS, ",")
 
 		if err := mc.sendEmail(form, recipients); err != nil {
 			log.Printf("Error sending email: %v", err)
-			c.JSON(500, gin.H{"error": "Failed to send emails"})
-			return
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to send emails"})
 		}
 
-		c.JSON(200, gin.H{"message": "Emails sent successfully!"})
+		return c.JSON(http.StatusOK, map[string]string{"message": "Emails sent successfully!"})
 	})
 
-	router.POST("/rent-signup", func(c *gin.Context) {
-
+	// Handle signup
+	e.POST("/rent-signup", func(c echo.Context) error {
 		var data SignupData
-		if err := c.ShouldBindJSON(&data); err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
-			return
+		if err := validateRequest(c, &data); err != nil {
+			return err
 		}
 
 		if err := mc.sendWelcomeEmail(data); err != nil {
 			log.Printf("Error sending email: %v", err)
-			c.JSON(500, gin.H{"error": "Failed to send email"})
-			return
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to send email"})
 		}
 
-		c.JSON(200, gin.H{"message": "Email sent successfully!"})
+		return c.JSON(http.StatusOK, map[string]string{"message": "Email sent successfully!"})
 	})
 
-	router.POST("/rent-activate", func(c *gin.Context) {
-
+	// Handle account activation
+	e.POST("/rent-activate", func(c echo.Context) error {
 		var data ActivateOrResetData
-		if err := c.ShouldBindJSON(&data); err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
-			return
+		if err := validateRequest(c, &data); err != nil {
+			return err
 		}
 
 		if err := mc.sendActivateEmail(data); err != nil {
 			log.Printf("Error sending email: %v", err)
-			c.JSON(500, gin.H{"error": "Failed to send email"})
-			return
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to send email"})
 		}
 
-		c.JSON(200, gin.H{"message": "Email sent successfully!"})
+		return c.JSON(http.StatusOK, map[string]string{"message": "Email sent successfully!"})
 	})
 
-	router.POST("/rent-resetpwd", func(c *gin.Context) {
-
+	// Handle password reset request
+	e.POST("/rent-resetpwd", func(c echo.Context) error {
 		var data ActivateOrResetData
-		if err := c.ShouldBindJSON(&data); err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
-			return
+		if err := validateRequest(c, &data); err != nil {
+			return err
 		}
 
 		if err := mc.sendPasswordResetEmail(data); err != nil {
 			log.Printf("Error sending email: %v", err)
-			c.JSON(500, gin.H{"error": "Failed to send email"})
-			return
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to send email"})
 		}
 
-		c.JSON(200, gin.H{"message": "Email sent successfully!"})
+		return c.JSON(http.StatusOK, map[string]string{"message": "Email sent successfully!"})
 	})
 
-	router.POST("/rent-completedpwdreset", func(c *gin.Context) {
-
+	// Handle completed password reset
+	e.POST("/rent-completedpwdreset", func(c echo.Context) error {
 		var data ResetCompleteData
-		if err := c.ShouldBindJSON(&data); err != nil {
-			c.JSON(400, gin.H{"error": err.Error()})
-			return
+		if err := validateRequest(c, &data); err != nil {
+			return err
 		}
 
 		if err := mc.sendResetCompletedEmail(data); err != nil {
 			log.Printf("Error sending email: %v", err)
-			c.JSON(500, gin.H{"error": "Failed to send email"})
-			return
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to send email"})
 		}
 
-		c.JSON(200, gin.H{"message": "Email sent successfully!"})
+		return c.JSON(http.StatusOK, map[string]string{"message": "Email sent successfully!"})
 	})
 
+	// Start the server
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 	slog.Info(fmt.Sprintf("Server is running on port %s", port))
-	router.Run(":" + port)
+	e.Logger.Fatal(e.Start(":" + port))
 }
