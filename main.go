@@ -22,6 +22,7 @@ type MailConfig struct {
 	USER       string
 	PWD        string
 	RECEPIENTS string
+	ALLOWED_IP string
 }
 
 type ContactForm struct {
@@ -521,6 +522,40 @@ func enableCORS() gin.HandlerFunc {
 
 }
 
+// ipRestriction middleware checks if the client's IP is in the allowed list
+func ipRestriction(allowedIPs string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		clientIP := c.ClientIP()
+		
+		// If no allowed IPs are specified, allow all requests
+		if allowedIPs == "" {
+			c.Next()
+			return
+		}
+		
+		// Split the allowed IPs string into a slice
+		allowedIPList := strings.Split(allowedIPs, ",")
+		
+		// Check if the client IP is in the allowed list
+		allowed := false
+		for _, ip := range allowedIPList {
+			if strings.TrimSpace(ip) == clientIP {
+				allowed = true
+				break
+			}
+		}
+		
+		// If the client IP is not allowed, return 403 Forbidden
+		if !allowed {
+			slog.Info(fmt.Sprintf("Blocked request from unauthorized IP: %s", clientIP))
+			c.AbortWithStatusJSON(403, gin.H{"error": "Access denied"})
+			return
+		}
+		
+		c.Next()
+	}
+}
+
 func (mc *MailConfig) sendEmail(form ContactForm, recipients []string) error {
 
 	type templateData struct {
@@ -675,12 +710,15 @@ func main() {
 	flag.StringVar(&mc.USER, "MAIL USER ", os.Getenv("EMAIL_USER"), "MAIL USER")
 	flag.StringVar(&mc.PWD, "MAIL PASSWORD", os.Getenv("EMAIL_PASS"), "MAIL PWD")
 	flag.StringVar(&mc.RECEPIENTS, "RECEPIENTS", os.Getenv("RECEPIENTS"), "RECEPIENTS")
+	flag.StringVar(&mc.ALLOWED_IP, "ALLOWED_IP", os.Getenv("ALLOWED_IP"), "ALLOWED_IP")
 
 	flag.Parse()
 
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.Use(enableCORS())
+	// Apply IP restriction middleware
+	router.Use(ipRestriction(mc.ALLOWED_IP))
 
 	router.POST("/submit-contact", func(c *gin.Context) {
 
