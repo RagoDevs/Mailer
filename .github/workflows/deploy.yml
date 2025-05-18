@@ -20,7 +20,7 @@ jobs:
       run: go test -v ./...
       
     - name: Build
-      run: go build -v -o mailer ./main.go
+      run: go build -v -o mailer ./
 
     - uses: actions/upload-artifact@v4
       with:
